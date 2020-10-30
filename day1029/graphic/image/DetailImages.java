@@ -13,11 +13,12 @@ public class DetailImages extends JPanel{
 	//이 메서드를 호출하는 자는 어떤 이미지를 보여줄지를 매개변수로 넘기면 된다.
 	public void setImg(Image img) {
 		this.img = img;
-		this.img = this.img.getScaledInstance(770, 500, Image.SCALE_SMOOTH);
+		this.img = this.img.getScaledInstance(700, 500, Image.SCALE_SMOOTH);
 	}
 	
 	@Override
 	public void paint(Graphics g) {
+		
 		g.drawImage(img, 0, 0, this);
 	}
 }

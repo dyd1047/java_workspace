@@ -18,6 +18,7 @@ public class ThumbImages extends JPanel implements MouseListener{
 		public ThumbImages(String path, DetailImages p_center) {
 			kit = Toolkit.getDefaultToolkit();
 			img = kit.getImage(path);
+			this.img = this.img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 			this.setPreferredSize(new Dimension(100, 100));
 			this.p_center = p_center;
 			
