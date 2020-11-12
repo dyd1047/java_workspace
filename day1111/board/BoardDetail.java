@@ -59,6 +59,10 @@ public class BoardDetail extends JPanel{
 			update();
 		});
 		
+		bt_del.addActionListener((e)->{
+			delete();
+		});
+		
 		bt_list.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -122,29 +126,59 @@ public class BoardDetail extends JPanel{
 		String[] sql = {"update board set title = '"+t_title.getText()+"' where board_id = "+board_id
 		, "update board set writer = '"+t_writer.getText()+"' where board_id = "+board_id
 		, "update board set content = '"+content.getText()+"' where board_id = "+board_id};
-		try {
-			for (int i = 0; i < sql.length; i++) {
-				pstmt = boardApp.getCon().prepareStatement(sql[i]);
-				result = pstmt.executeUpdate();
-			}
-			if(result == 0) {
-				JOptionPane.showMessageDialog(this, "게시글 수정에 실패하였습니다.");
-			}else {
-				if(JOptionPane.showConfirmDialog(this, "정말 수정하시겠습니까?", "confirm", JOptionPane.YES_NO_OPTION) == 0) {
-					JOptionPane.showMessageDialog(this, "수정이 완료되었습니다.");
-					boardApp.setPage(boardApp.BOARD_LIST);
+		if(JOptionPane.showConfirmDialog(this, "정말 수정하시겠습니까?", "confirm", JOptionPane.YES_NO_OPTION) == 0) {
+			try {
+				for (int i = 0; i < sql.length; i++) {
+					pstmt = boardApp.getCon().prepareStatement(sql[i]);
+					result = pstmt.executeUpdate();
+				}
+				if(result == 0) {
+					JOptionPane.showMessageDialog(this, "게시글 수정에 실패하였습니다.");
 				}else {
-					JOptionPane.showInternalMessageDialog(this, "수정을 취소하였습니다.");
+						JOptionPane.showMessageDialog(this, "수정이 완료되었습니다.");
+						boardApp.setPage(boardApp.BOARD_LIST);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				if(pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		
 	}
 	
 	//삭제하기
 	public void delete() {
-//		PreparedStatement
+		PreparedStatement pstmt = null;
+		
+		String sql = "delete from board where board_id = '"+board_id+"'";
+		if(JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?", "confirm", JOptionPane.YES_NO_OPTION) == 0) {
+			try {
+				pstmt = boardApp.getCon().prepareStatement(sql);
+				int result = pstmt.executeUpdate();
+				if(result == 0) {
+					JOptionPane.showMessageDialog(this, "삭제에 실패하였습니다.");
+				}else {
+						JOptionPane.showMessageDialog(this, "삭제가 완료되었습니다.");
+						boardApp.setPage(boardApp.BOARD_LIST);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				if(pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 }
