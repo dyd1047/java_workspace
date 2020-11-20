@@ -6,8 +6,8 @@ public class ProductVO {
 	private int product_id;
 	private int subcategory_id;
 	private String product_name;
-	private String brand;
-	private int price;
+	private String brand;             
+	private int price;      
 	private String filename;
 	private String detail;
 	
@@ -52,7 +52,9 @@ public class ProductVO {
 	}
 	public void setDetail(String detail) {
 		this.detail = detail;
-	}
+	} 
 	
+	//다시 만들거에요 저는 
 	
+	 
 }

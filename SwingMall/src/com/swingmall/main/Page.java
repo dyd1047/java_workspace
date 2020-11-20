@@ -9,7 +9,11 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 
 public class Page extends JPanel{
-	ShopMain shopMain;
+	private ShopMain shopMain;
+	
+	public ShopMain getShopMain() {
+		return shopMain;
+	}
 	
 	public Page(ShopMain shopMain) {
 		this.shopMain = shopMain;

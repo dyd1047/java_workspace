@@ -2,8 +2,8 @@ package com.swingmall.admin.product;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -25,11 +25,13 @@ public class Product extends Page{
 	JPanel p_center;
 	JTree tree;
 	JTable table;
-	JScrollPane s1, s2;
+	JScrollPane s1,s2;
 	JButton bt_regist;
-	ArrayList<String> topList; //최상위 카테고리 이름을 담게될 리스트 top, down, accessary, shoes
-	ArrayList<ArrayList> subList = new ArrayList<ArrayList>(); //모든 하위 카테고리
+	
+	ArrayList<String> topList;//최상위 카테고리 이름을 담게될 리스트 top,down,accessay,shoes
+	ArrayList<ArrayList> subList=new ArrayList<ArrayList>();//모든 하위 카테고리
 	ProductModel model;
+	RegistForm registForm;
 	
 	public Product(AdminMain adminMain) {
 		super(adminMain);
@@ -55,6 +57,7 @@ public class Product extends Page{
 		s1 = new JScrollPane(tree);
 		s2 = new JScrollPane(table);
 		bt_regist = new JButton("등록하기");
+		registForm = new RegistForm(this); //등록폼 생성
 		
 		//스타일 적용 
 		s1.setPreferredSize(new Dimension(200, AdminMain.HEIGHT-100));
@@ -69,20 +72,29 @@ public class Product extends Page{
 		p_center.add(bt_regist);//센터패널에 버튼부착
 		
 		add(p_west, BorderLayout.WEST);
+		//현재 패널이 보더레이아웃이므로,
 		add(p_center);
-		
 		
 		getProductList(null);
 		
 		//tree는 이벤트가 별도로 지원 ..
 		tree.addTreeSelectionListener((e)->{
 			DefaultMutableTreeNode selectedNode=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-			getProductList(selectedNode.toString());//모든 상품 가져오기
+			
+			if(selectedNode.toString().equals("상품목록")) {
+				getProductList(selectedNode.toString());//모든 상품 가져오기
+			}else {
+				getProductList(selectedNode.toString());
+			}
+		});
+		
+		bt_regist.addActionListener((e)->{
+			addRemoveContent(p_center, registForm);
 		});
 		
 	}
 	
-	//상위 카테고리 가져오기
+	//상위 카테고리 가져오기 
 	public void getTopList() {
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -125,7 +137,7 @@ public class Product extends Page{
 		}
 	}
 	
-	//트리노드 생성하기
+	//트리노트 생성하기 
 	public DefaultMutableTreeNode getCreatedNode(String parentName, ArrayList childName) {
 		//부모노드 생성하기 
 		DefaultMutableTreeNode parent = new DefaultMutableTreeNode(parentName);
@@ -184,9 +196,17 @@ public class Product extends Page{
 			table.updateUI();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}finally {
 			getAdminMain().getDbManager().close(pstmt, rs);
 		}
+		
 	}
-
+	
+	//보여질 컨텐츠와 가려질 컨텐츠를 제어하는 메서드
+	public void addRemoveContent(Component removeObj, Component addObj) {
+		this.remove(removeObj); //제거될 자
+		this.add(addObj); //부착될 자
+		updateUI();
+	}
+	
 }

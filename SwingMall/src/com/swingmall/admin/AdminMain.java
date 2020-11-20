@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -69,6 +71,30 @@ public class AdminMain extends JFrame{
 			navi[i].setBorderPainted(false);
 			navi[i].setContentAreaFilled(false);
 			navi[i].setFocusPainted(false);
+			navi[i].addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					Object obj = e.getSource();
+					for (int j = 0; j < navi.length; j++) {
+						if (obj == navi[j]) {
+							navi[j].setBackground(Color.WHITE);
+							navi[j].setForeground(Color.DARK_GRAY);
+							navi[j].setContentAreaFilled(true);
+						}
+					}
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					Object obj = e.getSource();
+					for (int j = 0; j < navi.length; j++) {
+						if (obj == navi[j]) {
+							navi[j].setBackground(Color.DARK_GRAY);
+							navi[j].setForeground(Color.WHITE);
+							navi[j].setContentAreaFilled(true);
+						}
+					}
+				}
+			});
 			p_navi.add(navi[i]); //패널에 네비게이션 부착
 		}
 		
